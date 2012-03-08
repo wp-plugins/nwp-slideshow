@@ -3,13 +3,13 @@
 Plugin Name: NWP Slideshow
 Plugin URI: http://blog.nephila.fr/nwp-slideshow-plugin-wordpress-en
 Description: Display and customize a nice and smooth slideshow on your WordPress website.
-Version:1.0
+Version:1.0.1
 Author:Franck Kosellek
 Author URI: http://www.nephila.fr
 Licence: GPL
 */
 
-$nwpsVersion = "1.0";
+$nwpsVersion = "1.0.1";
 
 register_activation_hook(__FILE__, 'install');
 require_once(dirname(__FILE__)."/funcs-backend.php");
