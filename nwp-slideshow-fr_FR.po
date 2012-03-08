@@ -1,0 +1,317 @@
+# Copyright (C) 2012 NWP Slideshow
+# This file is distributed under the same license as the NWP Slideshow package.
+msgid ""
+msgstr ""
+"Project-Id-Version: NWP Slideshow 1.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/nwp-slideshow\n"
+"POT-Creation-Date: 2012-03-08 12:09:04+00:00\n"
+"PO-Revision-Date: 2012-03-08 13:10+0100\n"
+"Last-Translator: Franck Kosellek <franck@kosellek.fr>\n"
+"Language-Team: Franck Kosellek <franck@nephila.fr>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: France\n"
+
+#: nwp-slideshow.php:85
+msgid "<p>Warning - The <b>/images/slides directory</b> is not writable by the server. Please, change directory permission.</p>"
+msgstr "<p>Attention - Le dossier <b>/images/slides</b> n'est pas accessible en écriture par le serveur. Veuillez changer les permissions.</p>"
+
+#: nwp-slideshow.php:86
+msgid "<b class='red'>To upload/edit an image or add a slide, change /images/slides directory permissions</b>"
+msgstr "<b class='red'>Pour uploader/éditer une image, ajouter un slide, changez les permissions du dossier /images/slides</b>"
+
+#: slideshow-backend.php:25
+msgid "About the plugin"
+msgstr "A propos du plugin"
+
+#: slideshow-backend.php:28
+msgid "NWP Slideshow - Version : "
+msgstr ""
+
+#: slideshow-backend.php:31
+msgid "NWP Slideshow allows you to display and customize a slideshow very easily on your WordPress."
+msgstr "NWP Slideshow vous permet de déployer et paramétrer un slideshow très simplement sur votre site WordPress."
+
+#: slideshow-backend.php:33
+msgid "Languages available are English and French. If you want to help on translation, please contact me =)."
+msgstr "Le plugin est disponible en Anglais et Français. Si vous souhaitez participer à la traduction, contactez moi =)."
+
+#: slideshow-backend.php:36
+msgid "The plugin works using jQuery and <a href='http://odyniec.net/projects/imgareaselect/' target='blank'>imgareaselect jQuery's plugin</a>."
+msgstr "Le plugin fonctionne avec jQuery et <a href='http://odyniec.net/projects/imgareaselect/' target='blank'> le plugin imgareaselect pour jQuery</a>."
+
+#: slideshow-backend.php:39
+msgid "If you have any bug, any advice, any complain, please <a href='http://blog.nephila.fr/nwp-slideshow-plugin-wordpress-en'>check its blog's page</a> or contact me at <a href='mailto:franck@nephila.fr'>franck@nephila.fr</a>."
+msgstr "Pour signaler un bug ou pour donner un avis, veuillez <a href='http://blog.nephila.fr/nwp-slideshow-plugin-wordpress-fr'>voir la page du blog</a> ou me contacter à <a href='mailto:franck@nephila.fr'>franck@nephila.fr</a>."
+
+#: slideshow-backend.php:45
+msgid "About me"
+msgstr "A propos de moi"
+
+#: slideshow-backend.php:48
+msgid "needFreelance-en.png"
+msgstr "needFreelance-fr.png"
+
+#: slideshow-backend.php:50
+msgid "Hi. My name is Franck Kosellek, a freelance web developer and a huge WordPress fan !"
+msgstr "Bonjour. Je m'appelle Franck Kosellek, développeur web freelance et grand fan de Wordpress ! "
+
+#: slideshow-backend.php:52
+msgid "I love this CMS that much because you almost can do any web project you want with it.."
+msgstr "J'aime beaucoup ce CMS car on peut l'utiliser pour la plupart de nos projets web."
+
+#: slideshow-backend.php:55
+msgid "If you need a freelance developer, SEO, contact me."
+msgstr "Vous avez besoin d'un développeur, intégrateur, référenceur freelance ? Contactez moi."
+
+#: slideshow-backend.php:58
+msgid "If you need an advice, or information about Wordpress, contact me."
+msgstr "Vous avez besoin de conseils / informations au sujet de Wordpress ? Contactez moi."
+
+#: slideshow-backend.php:60
+msgid "If you need a graphist, well... contact me and I will redirect you to someone who really knows something about graphism ;)."
+msgstr "Vous avez besoin d'un graphiste ? Et bien.... Contactez moi et je vous mettrai en contact avec une personne qui s'y connait vraiment ;)."
+
+#: slideshow-backend.php:64
+msgid "Check out my website "
+msgstr "Venez voir mon site"
+
+#: slideshow-backend.php:66
+msgid "(only in french for now =/ translation's in progress...)"
+msgstr "(bientôt en anglais)"
+
+#: slideshow-backend.php:69
+msgid "or e-mail me"
+msgstr "ou contactez moi par e-mail"
+
+#: slideshow-backend.php:71
+msgid "See me on "
+msgstr "Suivez moi sur"
+
+#: slideshow-backend.php:115
+msgid "NEW SLIDE"
+msgstr "NOUVEAU SLIDE"
+
+#: slideshow-backend.php:127
+msgid "Add a new slide"
+msgstr "Ajouter un nouveau slide"
+
+#: slideshow-backend.php:129
+#: slideshow-backend.php:162
+msgid "Position"
+msgstr ""
+
+#: slideshow-backend.php:130
+#: slideshow-backend.php:164
+msgid "Url"
+msgstr ""
+
+#: slideshow-backend.php:131
+#: slideshow-backend.php:167
+msgid "Image"
+msgstr ""
+
+#: slideshow-backend.php:133
+msgid "Add the new slide"
+msgstr "Ajouter le nouveau slide"
+
+#: slideshow-backend.php:135
+msgid "cancel"
+msgstr "annuler"
+
+#: slideshow-backend.php:141
+msgid "There is no slide."
+msgstr "Il n'y a aucun slide."
+
+#: slideshow-backend.php:174
+msgid "Change image"
+msgstr "Modifier l'image"
+
+#: slideshow-backend.php:177
+msgid "Content (Selection in front of the image indicates where content will be displayed)"
+msgstr "Contenu (La zone sélectionnable sur l'image indique où le contenu sera affiché)"
+
+#: slideshow-backend.php:183
+msgid "Edit the slide"
+msgstr "Modifier le slide"
+
+#: slideshow-backend.php:185
+msgid "Delete this slide"
+msgstr "Supprimer le slide"
+
+#: slideshow-backend.php:212
+msgid "Content"
+msgstr "Contenu"
+
+#: slideshow-backend.php:215
+msgid "Custom"
+msgstr ""
+
+#: slideshow-backend.php:215
+msgid "Each slide is set by yourself"
+msgstr "Vous paramétrez chaque slide vous même"
+
+#: slideshow-backend.php:218
+msgid "Last posts"
+msgstr "Derniers posts"
+
+#: slideshow-backend.php:218
+msgid "Automatically show the x last posts"
+msgstr "Affiche automatiquement les x derniers posts."
+
+#: slideshow-backend.php:221
+msgid "From category"
+msgstr "Par catégorie"
+
+#: slideshow-backend.php:221
+msgid "Posts from a specific category"
+msgstr "Les posts d'une catégorie spécifique"
+
+#: slideshow-backend.php:225
+msgid "Movement"
+msgstr "Animation"
+
+#: slideshow-backend.php:234
+msgid "Slideshow size (px)"
+msgstr "Taille du slideshow (px)"
+
+#: slideshow-backend.php:240
+msgid "Shown posts number"
+msgstr "Nombre de posts"
+
+#: slideshow-backend.php:242
+msgid "Only for 'last posts' or 'From category' type"
+msgstr "Seulement pour les types 'Derniers posts' et 'Par catégorie'"
+
+#: slideshow-backend.php:242
+msgid "How many posts are displayed ?"
+msgstr "Combien de posts sont affichés ?"
+
+#: slideshow-backend.php:246
+msgid "Category's posts"
+msgstr "Catégorie des posts"
+
+#: slideshow-backend.php:257
+msgid "Only for 'From category' type"
+msgstr "Seulement pour le type 'Par catégorie'"
+
+#: slideshow-backend.php:257
+msgid "From which category posts are displayed ?"
+msgstr "Quelle catégorie apparait dans le slideshow ?"
+
+#: slideshow-backend.php:261
+msgid "+ Advanced options"
+msgstr "+ Options avancées"
+
+#: slideshow-backend.php:266
+msgid "Shortcode"
+msgstr ""
+
+#: slideshow-backend.php:268
+msgid "To put the slideshow into a post/page. insert [shortcode] anywhere in the content."
+msgstr "Placez le slideshow dans un post/une page en insérant ce shortcode n'importe où."
+
+#: slideshow-backend.php:271
+msgid "Time interval (seconds)"
+msgstr "Interval de temps (secondes)"
+
+#: slideshow-backend.php:273
+msgid "Time elapsed between 2 slides."
+msgstr "Temps passé entre 2 slides"
+
+#: slideshow-backend.php:276
+msgid "Speed (ms)"
+msgstr "Vitesse (ms)"
+
+#: slideshow-backend.php:278
+msgid "Speed of the transition."
+msgstr "Vitesse de l'animation."
+
+#: slideshow-backend.php:281
+msgid "Auto slide"
+msgstr ""
+
+#: slideshow-backend.php:286
+msgid "On button's image"
+msgstr "Image du bouton ON"
+
+#: slideshow-backend.php:289
+#: slideshow-backend.php:296
+msgid "Preview : "
+msgstr "Aperçu"
+
+#: slideshow-backend.php:293
+msgid "Off button's image"
+msgstr "Image du bouton OFF"
+
+#: slideshow-backend.php:300
+msgid "Buttons position (px)"
+msgstr "Postion des boutons (px)"
+
+#: slideshow-backend.php:304
+msgid "Where are located slides buttons."
+msgstr "Localisation des boutons sur le slideshow."
+
+#: slideshow-backend.php:311
+msgid "Edit Slideshow"
+msgstr "Modifier le slideshow"
+
+#: slideshow-backend.php:313
+msgid "reset"
+msgstr ""
+
+#: slideshow-backend.php:319
+msgid "HOW TO PUT THE SLIDESHOW INTO A POST/PAGE ?"
+msgstr "COMMENT PLACER LE SLIDESHOW DANS UN POST / UNE PAGE ?"
+
+#: slideshow-backend.php:320
+msgid "Simply insert the following shortcode anywhere you want into the post : "
+msgstr "Insérez simplement le shortcode suivant où vous le souhaitez :"
+
+#: slideshow-backend.php:328
+msgid "Confirm you want to reset slideshow's settings (do not alter slides)"
+msgstr "Voulez vous reset les options du slideshow ? (ne modifie pas les slides)"
+
+#: slideshow-backend.php:329
+msgid "Confirm you want to delete this slide (data + image)"
+msgstr "Voulez vous supprimer ce slide (données + image) ?"
+
+#: slideshow-backend.php:343
+msgid "OPTIONS"
+msgstr ""
+
+#: slideshow-backend.php:344
+msgid "SLIDES (custom content)"
+msgstr "SLIDES (contenu custom)"
+
+#: slideshow-backend.php:345
+msgid "ABOUT"
+msgstr "A PROPOS"
+
+#: slideshow-backend.php:364
+msgid "Freelance web development / integration / SEO"
+msgstr "Développeur, intégrateur, référenceur Freelance"
+
+#. Plugin Name of the plugin/theme
+msgid "NWP Slideshow"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://blog.nephila.fr/nwp-slideshow-plugin-wordpress-en"
+msgstr "http://blog.nephila.fr/nwp-slideshow-plugin-wordpress-fr"
+
+#. Description of the plugin/theme
+msgid "Display and customize a nice and smooth slideshow on your WordPress website."
+msgstr "Déployez et paramétrez très facilement un slideshow sur votre site WordPress"
+
+#. Author of the plugin/theme
+msgid "Franck Kosellek"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.nephila.fr"
+msgstr ""
+
