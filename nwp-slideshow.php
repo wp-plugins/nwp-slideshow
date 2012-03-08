@@ -79,7 +79,7 @@ if (is_admin()) {
 
   /* Check if '/imagesslides' directory is writable. */
   if (!is_writable(dirname(__FILE__)."/images/slides") || !is_executable(dirname(__FILE__)."/images/slides"))  {
-    echo '<div class="error">'.__("<p>Warning - The <b>/images/slides directory</b> is not writable by the server. Please, change directory permission.</p>", "nwp-slideshow").'</div>';
+    $warning = '<div class="error">'.__("<p>Warning - The <b>/images/slides directory</b> is not writable by the server. Please, change directory permission.</p>", "nwp-slideshow").'</div>';
     $unwritable = __("<b class='red'>To upload/edit an image or add a slide, change /images/slides directory permissions</b>", "nwp-slideshow");
   }
 

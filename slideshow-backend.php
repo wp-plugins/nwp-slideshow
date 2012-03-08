@@ -323,6 +323,7 @@ function nwpsSlidesSettings($uri) {
 }
 
 function nwpSlideshowSettings() {
+  global $warning;
 
   /* Javascript Messages (hidden) */
   echo "<div class='jsmess' id='jsmess-reset'>".__("Confirm you want to reset slideshow's settings (do not alter slides)", "nwp-slideshow")."</div>";
@@ -331,6 +332,9 @@ function nwpSlideshowSettings() {
   echo "<div class='wrap'>";
   echo '<div id="icon-options-general" class="icon32"><br></div>';
   echo "<h2>NWP Slideshow Settings</h2> <br />";
+
+  if (isset($warning) && !empty($warning))
+    echo $warning;
   
   $section = "options";
   if (isset($_GET['section']))
