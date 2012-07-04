@@ -2,7 +2,7 @@ var curSlide = 1;
 
 
 function movesliding(id) {
-    var slideNbr = jQuery("#nwpsWindow .nwpsSlide").length;
+    var slideNbr = jQuery(".nwpsWindow .nwpsSlide").length;
     
     dist = 0;
     cur = id;
@@ -53,13 +53,13 @@ function moveNwps(id) {
 function autoMove() {
     tmpId = curSlide + 1;
     
-    if (tmpId > jQuery("#nwpsWindow .nwpsImg").length)
+    if (tmpId > jQuery(".nwpsWindow .nwpsImg").length)
 	tmpId = 1;
     moveNwps(tmpId);
 }
 
 jQuery(document).ready(function() {
-    
+
     jQuery("#nwpsNav-1").attr("src", jQuery("#nwpsNav-1").attr("src").replace("offbutton.png", "onbutton.png"));
     if (autoslide == "on")
 	var intervalId = setInterval("autoMove()", interval*1000);

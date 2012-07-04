@@ -9,21 +9,50 @@ function secureArray($arr) {
   return $arr;
 }
 
+function toAscii($str) {
+  $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $str);
+  $clean = strtolower(trim($clean, '-'));
+  $clean = preg_replace("/[\/_|+ -]+/", '-', $clean);
 
+  return $clean;
+}
 
-function editSlideshow($_POST, $_FILES) {
-  update_option("nwp_slideshow", serialize($_POST));
-  if (isset($_FILES['onbuttonimg']))
-    move_uploaded_file($_FILES['onbuttonimg']['tmp_name'], dirname(__FILE__).'/images/slides/onbutton.png');
-  if (isset($_FILES['offbuttonimg']))
-    move_uploaded_file($_FILES['offbuttonimg']['tmp_name'], dirname(__FILE__).'/images/slides/offbutton.png');
+function getSlideshowName($id) {
+  $slideshows = get_option('nwp_slideshows_list');
+
+  if (is_string($slideshows))
+    $slideshows = unserialize($slideshows);
+
+  for ($i = 0; isset($slideshows[$i]['label']); $i++)
+    if ($slideshows[$i]['id'] == $id)
+      return $slideshows[$i]['label'];
 
 }
 
+function addSlideshow($_POST) {
+  global $wpdb;
 
-function resetSlideshow() {
+  /* Edit Slideshows list */
+  $slideshows = get_option('nwp_slideshows_list');
+
+  $_POST = secureArray($_POST);
+
+  if (is_string($slideshows))
+    $slideshows = unserialize($slideshows);
+  
+  $label = $_POST['label'];
+  if ($_POST['id'] == '1')
+    $id = '1';
+  else
+    $id = date("U");
+
+  $slideshows[] = Array("label" => $label, "id" => $id);
+
+  $slideshows = serialize($slideshows);
+  update_option("nwp_slideshows_list", $slideshows);
+
+  /* Add Slideshow options */
   $array = Array(
-		 "shortcode" => "nwp-slideshow",
 		 "interval" => "10",
 		 "sizewidth" => "950",
 		 "sizeheight" => "400",
@@ -36,9 +65,21 @@ function resetSlideshow() {
 		 "movement" => "movesliding",
 		 "type" => "custom"
 		 );
-  update_option("nwp_slideshow", serialize($array));
-  @copy(dirname(__FILE__)."/images/sources/onbutton.png", dirname(__FILE__)."/images/slides/onbutton.png");
-  @copy(dirname(__FILE__)."/images/sources/offbutton.png", dirname(__FILE__)."/images/slides/offbutton.png");
+  update_option("nwps_".$id, serialize($array));
+  @copy(dirname(__FILE__)."/images/sources/onbutton.png", dirname(__FILE__)."/images/slides/onbutton-".$id.".png");
+  @copy(dirname(__FILE__)."/images/sources/offbutton.png", dirname(__FILE__)."/images/slides/offbutton-".$id.".png");
+}
+
+function changeSlideshow($_POST) {
+  update_option('curSlideshow', $_POST['changeSlideshow']);
+}
+
+function editSlideshow($_POST, $_FILES) {
+  update_option("nwps_".get_option('curSlideshow'), serialize($_POST));
+  if (isset($_FILES['onbuttonimg']))
+    move_uploaded_file($_FILES['onbuttonimg']['tmp_name'], dirname(__FILE__).'/images/slides/onbutton-'.get_option('curSlideshow').'.png');
+  if (isset($_FILES['offbuttonimg']))
+    move_uploaded_file($_FILES['offbuttonimg']['tmp_name'], dirname(__FILE__).'/images/slides/offbutton-'.get_option('curSlideshow').'.png');
 }
 
 function deleteSlide($_POST) {
@@ -63,6 +104,7 @@ function addSlide($_POST, $_FILES) {
 
   $q = "INSERT INTO nwp_slideshow VALUES(";
   $q .= "'', "; // ID
+  $q .= "'".get_option('curSlideshow')."', " ;
   $q .= "'".$_POST['position']."', "; // POSITION
   $q .= "'', "; // TEXT
   $q .= "'".$_POST['url']."', "; // URL

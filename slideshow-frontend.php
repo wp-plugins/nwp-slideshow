@@ -3,7 +3,7 @@
 
 
 
-function getSlides_last($nwpSlideshow) {
+function getSlides_last($nwpSlideshow, $id) {
   $args = Array(
 		"numberposts" => $nwpSlideshow['postsnbr'],
 		"orderby" => "post_date",
@@ -37,13 +37,13 @@ function getSlides_last($nwpSlideshow) {
   return $res;
 }
 
-function getSlides_category($nwpSlideshow) {
-  return getSlides_last($nwpSlideshow);
+function getSlides_category($nwpSlideshow, $id) {
+  return getSlides_last($nwpSlideshow, $id);
 }
 
-function getSlides_custom($nwpSlideshow) {
+function getSlides_custom($nwpSlideshow, $id) {
   global $wpdb;
-  $q = "SELECT * FROM nwp_slideshow ORDER BY position ASC";
+  $q = "SELECT * FROM nwp_slideshow WHERE slideshow='".$id."' ORDER BY position ASC";
   $slides = $wpdb->get_results($q);
 
   $uri = explode("&", $_SERVER['REQUEST_URI']);
@@ -56,23 +56,36 @@ function getSlides_custom($nwpSlideshow) {
     $res[$i]['textposy1'] = $slides[$i]->textposy1;
     $res[$i]['textposy2'] = $slides[$i]->textposy2;
   }
+
   return $res;
 }
 
-function displaySlideshow() {
-  global $nwpSlideshow;
+function displaySlideshow($param) {
+
+  $id = $param['id'];
+
+  $nwpSlideshow = get_option("nwps_".$id);
+  if (is_string($nwpSlideshow))
+    $nwpSlideshow = unserialize($nwpSlideshow);
+
+  /* Insert JS variables */
+  echo '<script type="text/javascript">';
+  echo 'var width = '.$nwpSlideshow['sizewidth'].';';
+  echo 'var interval = '.$nwpSlideshow['interval'].';';
+  echo 'var movement = "'.$nwpSlideshow['movement'].'";';
+  echo 'var speed = '.$nwpSlideshow['speed'].';';
+  echo 'var autoslide = "'.$nwpSlideshow['autoslide'].'";';
+  echo '</script>';
+
 
   /* What is the type of the Slideshow ? */
   $getSlides = "getSlides_".$nwpSlideshow['type'];
-  $slides = $getSlides($nwpSlideshow);
-
-  /* print_r($slides); */
-
+  $slides = $getSlides($nwpSlideshow, $id);
 
 
   $s = '';
 
-  $s .= '<div id="nwpsWindow">';
+  $s .= '<div id="nwpsWindow-'.$id.'" class="nwpsWindow">';
 
   $float = 0;
   for ($i = 0; isset($slides[$i]); $i++) {
@@ -105,7 +118,6 @@ function displaySlideshow() {
   $s .= '</p>';
 
   $s .= '</div>'; // #nwpsWindow
-
 
 
   return $s;

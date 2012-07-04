@@ -23,6 +23,13 @@ function addSlide() {
 	
 }
 
+function addSlideshow() {
+    if (jQuery("#addSlideshow").css("display") == "none")
+	jQuery("#addSlideshow").slideDown();
+    else
+	jQuery("#addSlideshow").slideUp();	
+}
+
 function advancedOptions() {
     if (jQuery("#advancedOptions").css("display") == "none")
 	jQuery("#advancedOptions").slideDown();
@@ -54,5 +61,8 @@ jQuery(document).ready(function() {
 	    jQuery("#cancel").click(function() { addSlide(); });
 	}
     }
+
+    jQuery("#addSlideshowButton").click(function() { addSlideshow(); });
+    jQuery("#changeSlideshowButton").change(function() { jQuery("#changeSlideshow").submit() });
 
 });

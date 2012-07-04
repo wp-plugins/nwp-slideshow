@@ -9,7 +9,7 @@ Author URI: http://www.nephila.fr
 Licence: GPL
 */
 
-$nwpsVersion = "1.0.1";
+$nwpsVersion = "1.1.1";
 
 register_activation_hook(__FILE__, 'install');
 require_once(dirname(__FILE__)."/funcs-backend.php");
@@ -18,13 +18,11 @@ function install() {
   global $wpdb;
   
   /* Reset Slideshow Options */
-  $nwpSlideshow = get_option("nwp_slideshow");
-  if (!$nwpSlideshow)
-    resetSlideshow();
+  addSlideshow(array("label" => "Default", "id" => "1"));
 
   /* Create slides table   */
   if(!mysql_num_rows(mysql_query("SHOW TABLES LIKE 'nwp_slideshow'"))) {
-    $q = "CREATE TABLE nwp_slideshow (id Int AUTO_INCREMENT, PRIMARY KEY(id), position Int, text Text, url Text, image Varchar(64), textposx1 Int, textposy1 Int, textposx2 Int, textposy2 Int)";
+    $q = "CREATE TABLE nwp_slideshow (id Int AUTO_INCREMENT, PRIMARY KEY(id), slideshow Int, position Int, text Text, url Text, image Varchar(64), textposx1 Int, textposy1 Int, textposx2 Int, textposy2 Int)";
     $wpdb->query($q) or die(mysql_error());
   }
 }
@@ -44,31 +42,37 @@ function nwpAdminHead() {
 }
 
 function nwpHead() {
-  global $nwpSlideshow;
+
+  $slideshows = get_option('nwp_slideshows_list');
+  if (is_string($slideshows))
+    $slideshows = unserialize($slideshows);
 
   echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>';
 
   /* echo "<style type='text/css'>.wrap, #nav, #nav ul, #slide-holder, #slide-runner, #slide-controls { width:".$nwpSlideshow['sizewidth']."px; } </style>"; */
 
-  echo "<style type='text/css'>";
-  echo "#nwpsWindow { width:".$nwpSlideshow['sizewidth']."px; height:".$nwpSlideshow['sizeheight']."px; }";
-  echo "#nwpsWindow .nwpsSlide { height:".$nwpSlideshow['sizeheight']."px; }";
-  echo "#nwpsWindow .nwpsSlide { width:".$nwpSlideshow['sizewidth']."px; }";
-  echo "</style>";
-
-  echo '<script type="text/javascript">';
-  echo 'var width = '.$nwpSlideshow['sizewidth'].';';
-  echo 'var interval = '.$nwpSlideshow['interval'].';';
-  echo 'var movement = "'.$nwpSlideshow['movement'].'";';
-  echo 'var speed = '.$nwpSlideshow['speed'].';';
-  echo 'var autoslide = "'.$nwpSlideshow['autoslide'].'";';
-  echo '</script>';
+  for ($i = 0; isset($slideshows[$i]['id']); $i++) {
+    $nwpSlideshow = get_option("nwps_".$slideshows[$i]['id']);
+    if (is_string($nwpSlideshow))
+      $nwpSlideshow = unserialize($nwpSlideshow);
+    echo "<style type='text/css'>\n";
+    echo "#nwpsWindow-".$slideshows[$i]['id']." { width:".$nwpSlideshow['sizewidth']."px; height:".$nwpSlideshow['sizeheight']."px; }\n";
+    echo "#nwpsWindow-".$slideshows[$i]['id']." .nwpsSlide { height:".$nwpSlideshow['sizeheight']."px; }\n";
+    echo "#nwpsWindow-".$slideshows[$i]['id']." .nwpsSlide { width:".$nwpSlideshow['sizewidth']."px; }\n";
+    echo "</style>\n";
+  }
 
   echo '<script src="' .plugins_url('js/frontend.js', __FILE__). '" type="text/javascript"></script>';
   echo '<link rel="stylesheet" type="text/css" href="' .plugins_url('css/frontend.css', __FILE__). '">';
 }
 
 if (is_admin()) {
+  /* Init sessions */
+  add_action('init', 'nwp_init_session', 1);
+
+  /* Set current slideshow */
+  if (get_option('curSlideshow') == '')
+    update_option("curSlideshow", "1");
 
   /* Add NWP Slideshow submenu */
   add_action('admin_menu', 'nwpSlideshowMenu');
@@ -90,13 +94,8 @@ if (is_admin()) {
 
 } else {
   add_action("wp_head", "nwpHead");
-
-  $nwpSlideshow = get_option("nwp_slideshow");
-  if (is_string($nwpSlideshow))
-    $nwpSlideshow = unserialize($nwpSlideshow);
-
   require_once(dirname(__FILE__)."/slideshow-frontend.php");
-  add_shortcode( $nwpSlideshow['shortcode'], 'displaySlideshow' );
+  add_shortcode( "nwp-slideshow", 'displaySlideshow' );
 }
 
 ?>

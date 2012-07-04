@@ -12,7 +12,11 @@ if (!empty($_POST['action']))
     deleteSlide($_POST);
   else if ($_POST['action'] == "addslide")
     addSlide($_POST, $_FILES);
+  else if ($_POST['action'] == "addslideshow")
+    addSlideshow($_POST);
 
+if (!empty($_POST['changeSlideshow']))
+  changeSlideshow($_POST);
 
 /******************
  * ABOUT SECTION */
@@ -86,12 +90,12 @@ function nwpsSlidesSettings($uri) {
   global $unwritable;
 
   /* Retrieve Slideshow Options */
-  $slideshow = get_option("nwp_slideshow");
+  $slideshow = get_option("nwps_".get_option('curSlideshow'));
   if (is_string($slideshow))
     $slideshow = unserialize($slideshow);
 
   /* retrieve slides */
-  $q = "SELECT * FROM nwp_slideshow ORDER BY position";
+  $q = "SELECT * FROM nwp_slideshow WHERE slideshow='".get_option('curSlideshow')."' ORDER BY position";
   $slides = $wpdb->get_results($q);
 
   /* Get current slide ID */
@@ -192,101 +196,99 @@ function nwpsSlidesSettings($uri) {
     /********************
      * OPTIONS SECTION */
     
-    function nwpsOptionsSettings($uri) {
-     global $unwritable;
+function nwpsOptionsSettings($uri) {
+  global $unwritable;
      
-  $slideshow = get_option("nwp_slideshow");
+  $slideshow = get_option("nwps_".get_option('curSlideshow'));
   if (is_string($slideshow))
     $slideshow = unserialize($slideshow);
   $categories = get_categories();
 
-
   ?>
 
-<form method="post" id="resetForm">
+  <form method="post" id="resetForm">
   <input type="hidden" name="action" value="resetslideshow" />
-</form>
-<form method="post" enctype="multipart/form-data">
-<input type="hidden" name="action" value="editslideshow" />
+  </form>
+  <form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="action" value="editslideshow" />
   <div class="row">
-    <div class="label"><?php _e("Content", "nwp-slideshow"); ?></div>
-    <div class="type">
-      <input type="radio" name="type" id="customType" value="custom" <?php if ($slideshow['type'] == "custom") { echo "checked"; } ?> />
-      <label for="customType"><?php _e("Custom", "nwp-slideshow"); ?></label> (<?php _e("Each slide is set by yourself", "nwp-slideshow"); ?>)
-      <br />
-      <input type="radio" name="type" id="lastType" value="last" <?php if ($slideshow['type'] == "last") { echo "checked"; } ?> />
-      <label for="lastType"><?php _e("Last posts", "nwp-slideshow"); ?></label> (<?php _e("Automatically show the x last posts", "nwp-slideshow"); ?>)
-      <br />
-      <input type="radio" name="type" id="categoryType" value="category" <?php if ($slideshow['type'] == "category") { echo "checked"; } ?> />
-      <label for="categoryType"><?php _e("From category", "nwp-slideshow"); ?></label> (<?php _e("Posts from a specific category", "nwp-slideshow"); ?>)
-    </div>
+  <div class="label"><?php _e("Name", "nwp-slideshow"); ?></div>
+  <input type="text" name="name" value="<?php echo getSlideshowName(get_option('curSlideshow')); ?>" />
   </div>
   <div class="row">
-    <label class="label" for="movement"><?php _e("Movement", "nwp-slideshow"); ?></label>
-    <select name="movement" id="movement">
-      <option value="movesliding" <?php if ($slideshow['movement'] == "movesliding") { echo "selected"; } ?>>Slide</option>
-      <option value="movefading" <?php if ($slideshow['movement'] == "movefading") { echo "selected"; } ?>>Fade in / Fade out</option>
-      <option value="moveresizing" <?php if ($slideshow['movement'] == "moveresizing") { echo "selected"; } ?>>Resize</option>
-      <option value="movebasic" <?php if ($slideshow['movement'] == "movebasic") { echo "selected"; } ?>>Basic</option>
-    </select>
+  <div class="label"><?php _e("Content", "nwp-slideshow"); ?></div>
+  <div class="type">
+  <input type="radio" name="type" id="customType" value="custom" <?php if ($slideshow['type'] == "custom") { echo "checked"; } ?> />
+  <label for="customType"><?php _e("Custom", "nwp-slideshow"); ?></label> (<?php _e("Each slide is set by yourself", "nwp-slideshow"); ?>)
+  <br />
+  <input type="radio" name="type" id="lastType" value="last" <?php if ($slideshow['type'] == "last") { echo "checked"; } ?> />
+  <label for="lastType"><?php _e("Last posts", "nwp-slideshow"); ?></label> (<?php _e("Automatically show the x last posts", "nwp-slideshow"); ?>)
+  <br />
+  <input type="radio" name="type" id="categoryType" value="category" <?php if ($slideshow['type'] == "category") { echo "checked"; } ?> />
+  <label for="categoryType"><?php _e("From category", "nwp-slideshow"); ?></label> (<?php _e("Posts from a specific category", "nwp-slideshow"); ?>)
+  </div>
   </div>
   <div class="row">
-    <div class="label"><?php _e("Slideshow size (px)", "nwp-slideshow"); ?></div>
-    <label for="sizewidth">Width</label> <input type="text" name="sizewidth" id="sizewidth" value="<?php echo $slideshow['sizewidth']; ?>" class="nbrStyle" />
-    <span class="spacement"></span>
-    <label for="sizeheight">Height</label> <input type="text" name="sizeheight" id="sizeheight" value="<?php echo $slideshow['sizeheight']; ?>" class="nbrStyle" />
+  <label class="label" for="movement"><?php _e("Movement", "nwp-slideshow"); ?></label>
+  <select name="movement" id="movement">
+  <option value="movesliding" <?php if ($slideshow['movement'] == "movesliding") { echo "selected"; } ?>>Slide</option>
+  <option value="movefading" <?php if ($slideshow['movement'] == "movefading") { echo "selected"; } ?>>Fade in / Fade out</option>
+  <option value="moveresizing" <?php if ($slideshow['movement'] == "moveresizing") { echo "selected"; } ?>>Resize</option>
+  <option value="movebasic" <?php if ($slideshow['movement'] == "movebasic") { echo "selected"; } ?>>Basic</option>
+  </select>
   </div>
   <div class="row">
-    <label class="label" for="postsnbr"><?php _e("Shown posts number", "nwp-slideshow"); ?></label>
-    <input type="text" name="postsnbr" id="postsnbr" value="<?php echo $slideshow['postsnbr']; ?>" class="nbrStyle" />
-    <span class="clue"><b><?php _e("Only for 'last posts' or 'From category' type", "nwp-slideshow"); ?> : </b> <?php _e("How many posts are displayed ?", "nwp-slideshow"); ?> </span>
-  </div>
-
-  <div class="row">
-    <label class="label" for="category"><?php _e("Category's posts", "nwp-slideshow"); ?></label>
-    <select name="category" id="category">
-      <?php
-	foreach ($categories as $category) {
-	  echo "<option value='".$category->term_id."' ";
-	  if ($category->term_id == $slideshow['category'])
-	    echo "selected";
-	  echo " >".$category->name."</option>";
-	}
-      ?>
-    </select>
-    <span class="clue"><b><?php _e("Only for 'From category' type", "nwp-slideshow"); ?> : </b> <?php _e("From which category posts are displayed ?", "nwp-slideshow"); ?> </span>
-  </div>
-
-<br />
-<a href="javascript:void(0);" id="advancedButton" ><?php _e("+ Advanced options", "nwp-slideshow"); ?></a>
-
-<div id="advancedOptions">
-
-  <div class="row">
-    <label class="label" for="shortcode"><?php _e("Shortcode", "nwp-slideshow"); ?></label>
-    <input type="text" name="shortcode" id="shortcode" value="<?php echo $slideshow['shortcode']; ?>" />
-    <span class="clue"><?php _e("To put the slideshow into a post/page. insert [shortcode] anywhere in the content.", "nwp-slideshow"); ?></span>
+  <div class="label"><?php _e("Slideshow size (px)", "nwp-slideshow"); ?></div>
+  <label for="sizewidth">Width</label> <input type="text" name="sizewidth" id="sizewidth" value="<?php echo $slideshow['sizewidth']; ?>" class="nbrStyle" />
+  <span class="spacement"></span>
+  <label for="sizeheight">Height</label> <input type="text" name="sizeheight" id="sizeheight" value="<?php echo $slideshow['sizeheight']; ?>" class="nbrStyle" />
   </div>
   <div class="row">
-    <label class="label" for="interval"><?php _e("Time interval (seconds)", "nwp-slideshow"); ?></label>
-    <input type="text" name="interval" id="interval" value="<?php echo $slideshow['interval']; ?>" class="nbrStyle" />
-    <span class="clue"><?php _e("Time elapsed between 2 slides.", "nwp-slideshow"); ?></span>
-  </div>
-  <div class="row">
-    <label class="label" for="speed"><?php _e("Speed (ms)", "nwp-slideshow"); ?></label>
-    <input type="text" name="speed" id="speed" value="<?php echo $slideshow['speed']; ?>" class="nbrStyle" />
-    <span class="clue"><?php _e("Speed of the transition.", "nwp-slideshow"); ?></span>
-  </div>
-  <div class="row">
-    <label class="label" for="autoslide"><?php _e("Auto slide", "nwp-slideshow"); ?></label>
-    <input type="checkbox" name="autoslide" id="autoslide" <?php if ($slideshow['autoslide'] == "on") { echo "checked"; } ?> />
+  <label class="label" for="postsnbr"><?php _e("Shown posts number", "nwp-slideshow"); ?></label>
+  <input type="text" name="postsnbr" id="postsnbr" value="<?php echo $slideshow['postsnbr']; ?>" class="nbrStyle" />
+  <span class="clue"><b><?php _e("Only for 'last posts' or 'From category' type", "nwp-slideshow"); ?> : </b> <?php _e("How many posts are displayed ?", "nwp-slideshow"); ?> </span>
   </div>
 
   <div class="row">
-    <label class="label" for="onbuttonimg"><?php _e("On button's image", "nwp-slideshow"); ?></label>
-    <?php if (!empty($unwritable)) { echo $unwritable; } else { ?>
-    <input type="file" name="onbuttonimg" id="onbuttonimg" />
-    <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/onbutton.png", __FILE__); ?>" alt="off button img" /> </span>
+  <label class="label" for="category"><?php _e("Category's posts", "nwp-slideshow"); ?></label>
+  <select name="category" id="category">
+  <?php
+  foreach ($categories as $category) {
+    echo "<option value='".$category->term_id."' ";
+    if ($category->term_id == $slideshow['category'])
+      echo "selected";
+    echo " >".$category->name."</option>";
+  }
+  ?>
+  </select>
+  <span class="clue"><b><?php _e("Only for 'From category' type", "nwp-slideshow"); ?> : </b> <?php _e("From which category posts are displayed ?", "nwp-slideshow"); ?> </span>
+  </div>
+
+  <br />
+  <a href="javascript:void(0);" id="advancedButton" ><?php _e("+ Advanced options", "nwp-slideshow"); ?></a>
+
+  <div id="advancedOptions">
+
+  <div class="row">
+  <label class="label" for="interval"><?php _e("Time interval (seconds)", "nwp-slideshow"); ?></label>
+  <input type="text" name="interval" id="interval" value="<?php echo $slideshow['interval']; ?>" class="nbrStyle" />
+  <span class="clue"><?php _e("Time elapsed between 2 slides.", "nwp-slideshow"); ?></span>
+  </div>
+  <div class="row">
+  <label class="label" for="speed"><?php _e("Speed (ms)", "nwp-slideshow"); ?></label>
+  <input type="text" name="speed" id="speed" value="<?php echo $slideshow['speed']; ?>" class="nbrStyle" />
+  <span class="clue"><?php _e("Speed of the transition.", "nwp-slideshow"); ?></span>
+  </div>
+  <div class="row">
+  <label class="label" for="autoslide"><?php _e("Auto slide", "nwp-slideshow"); ?></label>
+  <input type="checkbox" name="autoslide" id="autoslide" <?php if ($slideshow['autoslide'] == "on") { echo "checked"; } ?> />
+  </div>
+
+  <div class="row">
+  <label class="label" for="onbuttonimg"><?php _e("On button's image", "nwp-slideshow"); ?></label>
+  <?php if (!empty($unwritable)) { echo $unwritable; } else { ?>
+  <input type="file" name="onbuttonimg" id="onbuttonimg" />
+  <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/onbutton.png", __FILE__); ?>" alt="off button img" /> </span>
     <?php } ?>
   </div>
   <div class="row">
@@ -318,12 +320,16 @@ function nwpsSlidesSettings($uri) {
   echo "<div id='help'>";
   echo "<h3>".__("HOW TO PUT THE SLIDESHOW INTO A POST/PAGE ?", "nwp-slideshow")."</h3>";
   _e("Simply insert the following shortcode anywhere you want into the post : ", "nwp-slideshow");
-  echo " <i>[".$slideshow['shortcode']."]</i>";
+  echo " <i>[nwp-slideshow id='".get_option('curSlideshow')."']</i>";
   echo "</div>";
 }
 
 function nwpSlideshowSettings() {
   global $warning;
+
+  $slideshows = get_option("nwp_slideshows_list");
+  if (is_string($slideshows))
+    $slideshows = unserialize($slideshows);
 
   /* Javascript Messages (hidden) */
   echo "<div class='jsmess' id='jsmess-reset'>".__("Confirm you want to reset slideshow's settings (do not alter slides)", "nwp-slideshow")."</div>";
@@ -331,7 +337,24 @@ function nwpSlideshowSettings() {
 
   echo "<div class='wrap'>";
   echo '<div id="icon-options-general" class="icon32"><br></div>';
-  echo "<h2>NWP Slideshow Settings</h2> <br />";
+  echo "<h2>NWP Slideshow Settings";
+  echo "<span id='changeSlideshowContainer'><form method='post' id='changeSlideshow'><select id='changeSlideshowButton' name='changeSlideshow'>";
+  for ($i = 0; isset($slideshows[$i]['label']); $i++) {
+    echo "<option value='".$slideshows[$i]['id']."' ";
+    if ($slideshows[$i]['id'] == get_option('curSlideshow'))
+      echo " selected ";
+    echo " >".$slideshows[$i]['label']."</option>";
+  }
+  echo "</select></form>";
+  echo " (<a id='addSlideshowButton' href='javascript:void(0);'>+ slideshow</a>)</span>";
+  echo "</h2> <br />";
+  echo "<form id='addSlideshow' method='post' action='".$uri[0]."'>";
+  echo "<h3>Ajouter un slideshow</h3>";
+  echo "<input type='hidden' name='action' value='addslideshow' />";
+  echo "Label du slideshow : <input type='text' name='label' />";
+  echo "<input type='submit' value='Ajouter' />";
+  echo "</form>"; // #addSlideshow
+
 
   if (isset($warning) && !empty($warning))
     echo $warning;
@@ -348,12 +371,13 @@ function nwpSlideshowSettings() {
 		__("SLIDES (custom content)", "nwp-slideshow") => "slides",
 	        __("ABOUT", "nwp-slideshow") => "about"
 		);
+
   echo "<div id='nwpsMenu'>";
   foreach ($menu as $key => $value) {
     if ($value == $section)
-      echo "<b>".$key."</b>";
+      echo "<b class='menuItem'>".$key."</b>";
     else
-      echo "<a href='".$uri[0]."&section=".$value."'>".__($key, "nwp-slideshow")."</a>";
+      echo "<a class='menuItem' href='".$uri[0]."&section=".$value."'>".__($key, "nwp-slideshow")."</a>";
   }
   echo "</div>";
 
