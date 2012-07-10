@@ -13,6 +13,8 @@ function osc(img, selection) {
     jQuery("#textposy2").val(selection.y2);
     jQuery("#textposx1").val(selection.x1);
     jQuery("#textposx2").val(selection.x2);
+
+    updateSlideTextContent();
 }
 
 function addSlide() {
@@ -36,6 +38,15 @@ function advancedOptions() {
 	jQuery("#advancedOptions").slideUp();
 }
 
+function updateSlideTextContent() {
+    var width = parseInt(jQuery("#textposx2").val()) - parseInt(jQuery("#textposx1").val());
+    var height = parseInt(jQuery("#textposy2").val()) - parseInt(jQuery("#textposy1").val());
+    jQuery("#slideTextContent").css("left", jQuery("#textposx1").val()+"px");
+    jQuery("#slideTextContent").css("top", jQuery("#textposy1").val()+"px");
+    jQuery("#slideTextContent").css("width", width+"px");
+    jQuery("#slideTextContent").css("height", height+"px");
+}
+
 jQuery(document).ready(function() {
 
     if (jQuery("#delslideshowForm").length > 0) {
@@ -54,6 +65,7 @@ jQuery(document).ready(function() {
 		onSelectEnd: osc
 	    });
 	    jQuery(".delete").click(function() { deleteSlide(); });
+	    updateSlideTextContent();
 	}
 	if (jQuery("#addSlideButton").length > 0) {
 	    jQuery("#addSlideButton").click(function() { addSlide(); });
@@ -62,6 +74,7 @@ jQuery(document).ready(function() {
     }
 
     jQuery("#addSlideshowButton").click(function() { addSlideshow(); });
+    jQuery("#cancelAddSlideshow").click(function() { addSlideshow(); });
     jQuery("#changeSlideshowButton").change(function() { jQuery("#changeSlideshow").submit() });
 
 });

@@ -59,15 +59,13 @@ function autoMove() {
 }
 
 jQuery(document).ready(function() {
-jQuery("#nwpsNav-1").attr("src", jQuery("#nwpsNav-1").attr("src").replace("offbutton", "onbutton"));
+    jQuery("#nwpsNav-1").attr("src", jQuery("#nwpsNav-1").attr("src").replace("offbutton", "onbutton"));
     if (autoslide == "on")
 	var intervalId = setInterval("autoMove()", interval*1000);
-
+    
     jQuery(".nwpsNav").click(function(event) {
 	id = event.target.id.replace("nwpsNav-", "");
 	moveNwps(id);
     });
-
-
 
 });

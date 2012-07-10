@@ -14,6 +14,8 @@ if (!empty($_POST['action']))
     addSlide($_POST, $_FILES);
   else if ($_POST['action'] == "addslideshow")
     addSlideshow($_POST);
+  else if ($_POST['action'] == "editoptions")
+    editoptions($_POST);
 
 if (!empty($_POST['changeSlideshow']))
   changeSlideshow($_POST);
@@ -66,14 +68,14 @@ function nwpsAboutSettings($uri) {
 
   echo "<a href='http://www.nephila.fr'>";
   _e("Check out my website ", "nwp-slideshow");
-  echo "</a>";
+  echo "</a> ";
   _e("(only in french for now =/ translation's in progress...)", "nwp-slideshow");
   echo "<br />";
   echo "<a href='mailto:franck@nephila.fr'>";
   _e("or e-mail me", "nwp-slideshow");
   echo "</a>.<br />";
-  _e("See me on ", "nwp-slideshow");
-  echo "<a href='https://plus.google.com/114926869349067736072/about'>Google+</a>,
+  _e("See me on", "nwp-slideshow");
+  echo " <a href='https://plus.google.com/114926869349067736072/about'>Google+</a>,
 <a href='https://www.facebook.com/profile.php?id=100000319169550'>Facebook</a>,
 <a href='http://www.linkedin.com/in/franckkosellek'>Linkedin</a>,
 <a href='http://ca.viadeo.com/fr/profile/kosellek.franck'>Viadeo</a>.";
@@ -102,6 +104,8 @@ function nwpsSlidesSettings($uri) {
   $slideId = 0;
   if (!empty($_GET['slide']))
     $slideId = $_GET['slide'];
+
+  echo "<strong>".__("These slides are used for custom content option.", "nwp-slideshow")."</strong><br /><br />";
 
   /* Slides numbering */
   echo "<div id='slideLst'>Slides : ";
@@ -142,7 +146,7 @@ function nwpsSlidesSettings($uri) {
 <?php
   /* Check if there is slides in Database */
   if (!$slides) {
-    echo "<br /><br /><br />".__("There is no slide.", "nwp-slideshow");
+    echo "<br /><br /><br />".__("There is no slide in this slideshow.", "nwp-slideshow");
     return ;
   }
 ?>
@@ -171,6 +175,7 @@ function nwpsSlidesSettings($uri) {
 <h3><?php echo _e("Image", "nwp-slideshow"); ?></h3>
 
 <div id="slideImgFrame" style='width:<?php echo $slideshow["sizewidth"]; ?>px; height:<?php echo $slideshow["sizeheight"]; ?>px;'>
+<div id="slideTextContent"><?php echo formatSlideText($curSlide->text); ?></div>
   <img class="slideImg" src="<?php echo $imageUrl; ?>" alt="<?php echo $curSlide->image; ?>" />
 </div>
 
@@ -197,6 +202,39 @@ function nwpsSlidesSettings($uri) {
      * OPTIONS SECTION */
     
 function nwpsOptionsSettings($uri) {
+
+  $options = get_option("nwps_options");
+  if (is_string($options))
+    $options = unserialize($options);
+
+?>
+
+<strong>
+<?php _e("These options are about the entire plugin. They are no different from a slideshow to another.", "nwp-slideshow"); ?>
+</strong>
+
+<form method="post">
+<input type="hidden" name="action" value="editoptions" />
+  <div class="row">
+  <label class="label" for="interval"><?php _e("Enable jQuery call", "nwp-slideshow"); ?></label>
+  <input type="checkbox" name="jquery" id="jquery" <?php if ($options['jquery'] == "on") { echo "checked"; } ?> />
+  <span class="clue"><?php _e("If your theme or another plugin already use jQuery, uncheck it.", "nwp-slideshow"); ?></span>
+  </div>
+
+  <div class="row">
+  <label class="label" for="interval"><?php _e("Set jQuery noConflict", "nwp-slideshow"); ?></label>
+  <input type="checkbox" name="noconflict" id="noconflict" <?php if ($options['noconflict'] == "on") { echo "checked"; } ?> />
+  <span class="clue"><?php _e("If your WP use an other JS library (ie. Mootools, Prototype, etc), check it.", "nwp-slideshow"); ?></span>
+  </div>
+
+<br />
+<input type="submit" value="Submit" />
+
+  </form>
+
+<?php }
+
+function nwpsSlideshowSettings($uri) {
   global $unwritable;
      
   $slideshow = get_option("nwps_".get_option('curSlideshow'));
@@ -322,9 +360,11 @@ function nwpsOptionsSettings($uri) {
   echo "<div id='help'>";
   echo "<h3>".__("HOW TO PUT THE SLIDESHOW INTO A POST/PAGE ?", "nwp-slideshow")."</h3>";
   _e("Simply insert the following shortcode anywhere you want into the post : ", "nwp-slideshow");
-  echo " <i>[nwp-slideshow id='".get_option('curSlideshow')."']</i>";
+  echo " <span>[nwp-slideshow id='".get_option('curSlideshow')."']</span>";
   echo "</div>";
-}
+
+
+ }
 
 function nwpSlideshowSettings() {
   global $warning;
@@ -340,27 +380,19 @@ function nwpSlideshowSettings() {
   echo "<div class='wrap'>";
   echo '<div id="icon-options-general" class="icon32"><br></div>';
   echo "<h2>NWP Slideshow ".__("Settings", "nwp-slideshow");
-  echo "<span id='changeSlideshowContainer'><form method='post' id='changeSlideshow'><select id='changeSlideshowButton' name='changeSlideshow'>";
-  for ($i = 0; isset($slideshows[$i]['label']); $i++) {
-    echo "<option value='".$slideshows[$i]['id']."' ";
-    if ($slideshows[$i]['id'] == get_option('curSlideshow'))
-      echo " selected ";
-    echo " >".$slideshows[$i]['label']."</option>";
-  }
-  echo "</select></form>";
-  echo " (<a id='addSlideshowButton' href='javascript:void(0);'>+ slideshow</a>)</span>";
   echo "</h2> <br />";
   echo "<form id='addSlideshow' method='post' action='".$uri[0]."'>";
   echo "<h3>Ajouter un slideshow</h3>";
   echo "<input type='hidden' name='action' value='addslideshow' />";
   echo "Label du slideshow : <input type='text' name='label' />";
   echo "<input type='submit' value='Ajouter' />";
+  echo " ---- <a href='javascript:void(0);' id='cancelAddSlideshow'>".__("Cancel", "nwp-slideshow")."</a>";
   echo "</form>"; // #addSlideshow
 
   if (isset($warning) && !empty($warning))
     echo $warning;
   
-  $section = "options";
+  $section = "slideshow";
   if (isset($_GET['section']))
     $section = $_GET['section'];
 
@@ -368,11 +400,21 @@ function nwpSlideshowSettings() {
 
   /* Display the menu */
   $menu = Array(
+		__("SLIDESHOW", "nwp-slideshow") => "slideshow",
+		__("SLIDES", "nwp-slideshow") => "slides",
 		__("OPTIONS", "nwp-slideshow") => "options",
-		__("SLIDES (custom content)", "nwp-slideshow") => "slides",
 	        __("ABOUT", "nwp-slideshow") => "about"
 		);
 
+  echo "<span id='changeSlideshowContainer'>Slideshow : <form method='post' id='changeSlideshow'><select id='changeSlideshowButton' name='changeSlideshow'>";
+  for ($i = 0; isset($slideshows[$i]['label']); $i++) {
+    echo "<option value='".$slideshows[$i]['id']."' ";
+    if ($slideshows[$i]['id'] == get_option('curSlideshow'))
+      echo " selected ";
+    echo " >".$slideshows[$i]['label']."</option>";
+  }
+  echo "</select></form>";
+  echo " <a id='addSlideshowButton' href='javascript:void(0);'><img src='".plugins_url("/images/", __FILE__)."add.png' alt='add slideshow' /></a></span>";
   echo "<div id='nwpsMenu'>";
   foreach ($menu as $key => $value) {
     if ($value == $section)

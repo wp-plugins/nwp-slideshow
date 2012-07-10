@@ -29,6 +29,10 @@ function getSlideshowName($id) {
 
 }
 
+function editOptions($_POST) {
+  update_option("nwps_options", serialize($_POST));
+}
+
 function delSlideshow($_POST) {
   global $wpdb;
 

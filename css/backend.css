@@ -2,11 +2,10 @@
 
 #changeSlideshowContainer {
     font-size:12px;
-    margin-left:40px;
 }
 
 #nwpsMenu {
-    margin:0 0 30px 44px;
+    margin:15px 0 30px 70px;
 }
 
 #nwpsMenu a.menuItem, #nwpsMenu b {
@@ -28,6 +27,19 @@
     display:inline;
 }
 
+#changeSlideshowContainer select {
+    width:170px;
+}
+
+#changeSlideshowContainer {
+    width:280px;
+    display:block;
+}
+
+#addSlideshowButton {
+    float:right;
+}
+
 #addSlideshow {
     border:2px solid #666;
     border-top:none;
@@ -35,6 +47,7 @@
     padding:20px;
     padding-top:0;
     position:absolute;
+    top:120px;
     left:30px;
     background:#fff;
     display:none;
@@ -81,6 +94,7 @@ input[type="submit"] {
 #nwpsSettings {
     font-size:12px;
     display:inline-block;
+    margin-left:70px;
 }
 
 .clue {
@@ -101,9 +115,13 @@ input[type="submit"] {
 #advancedOptions {
     display:none;
 }
+#help span {
+    background:#fff;
+    padding:4px;
+}
 #help {
-    background:#ccc;
-    padding:5px;
+    background:#f0c963;
+    padding:15px;
     margin-top:30px;
 }
 
@@ -120,7 +138,13 @@ input[type="submit"] {
     padding:0 0 0 10px;
 }
 
+#slideTextContent {
+    position:absolute;
+    overflow:hidden;
+}
+
 #slideImgFrame {
+    position:relative;
     overflow:hidden;
 }
 

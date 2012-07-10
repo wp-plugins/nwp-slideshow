@@ -12,7 +12,6 @@ Licence: GPL
 $nwpsVersion = "1.1.1";
 
 register_activation_hook(__FILE__, 'install');
-require_once(dirname(__FILE__)."/funcs-backend.php");
 
 function install() {
   global $wpdb;
@@ -25,6 +24,10 @@ function install() {
     $q = "CREATE TABLE nwp_slideshow (id Int AUTO_INCREMENT, PRIMARY KEY(id), slideshow Int, position Int, text Text, url Text, image Varchar(64), textposx1 Int, textposy1 Int, textposx2 Int, textposy2 Int)";
     $wpdb->query($q) or die(mysql_error());
   }
+
+  /* Add plugin options */
+  $options = Array("jquery" => "on", "noconflict" => "");
+  update_option("nwps_options", $options);
 }
 
 function nwpSlideshowMenu() {
@@ -47,9 +50,14 @@ function nwpHead() {
   if (is_string($slideshows))
     $slideshows = unserialize($slideshows);
 
-  echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>';
+  $options = get_option('nwps_options');
+  if (is_string($options))
+    $options = unserialize($options);
 
-  /* echo "<style type='text/css'>.wrap, #nav, #nav ul, #slide-holder, #slide-runner, #slide-controls { width:".$nwpSlideshow['sizewidth']."px; } </style>"; */
+  if ($options['jquery'] == 'on')
+    echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>';
+  if ($options['noconflict'] == 'on')
+    echo '<script type="text/javascript">jQuery.noConflict();</script>';
 
   for ($i = 0; isset($slideshows[$i]['id']); $i++) {
     $nwpSlideshow = get_option("nwps_".$slideshows[$i]['id']);
@@ -67,6 +75,9 @@ function nwpHead() {
 }
 
 if (is_admin()) {
+  require_once(dirname(__FILE__)."/funcs-frontend.php");
+  require_once(dirname(__FILE__)."/funcs-backend.php");
+
   /* Set current slideshow */
   if (get_option('curSlideshow') == '')
     update_option("curSlideshow", "1");
@@ -93,6 +104,8 @@ if (is_admin()) {
   require_once(dirname(__FILE__)."/slideshow-backend.php");
 
 } else {
+  require_once(dirname(__FILE__)."/funcs-frontend.php");
+
   add_action("wp_head", "nwpHead");
   require_once(dirname(__FILE__)."/slideshow-frontend.php");
   add_shortcode( "nwp-slideshow", 'displaySlideshow' );
