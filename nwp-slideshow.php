@@ -17,7 +17,7 @@ require_once(dirname(__FILE__)."/funcs-backend.php");
 function install() {
   global $wpdb;
   
-  /* Reset Slideshow Options */
+  /* Add first slideshow */
   addSlideshow(array("label" => "Default", "id" => "1"));
 
   /* Create slides table   */
@@ -67,9 +67,6 @@ function nwpHead() {
 }
 
 if (is_admin()) {
-  /* Init sessions */
-  add_action('init', 'nwp_init_session', 1);
-
   /* Set current slideshow */
   if (get_option('curSlideshow') == '')
     update_option("curSlideshow", "1");
@@ -85,12 +82,15 @@ if (is_admin()) {
   if (!is_writable(dirname(__FILE__)."/images/slides") || !is_executable(dirname(__FILE__)."/images/slides"))  {
     $warning = '<div class="error">'.__("<p>Warning - The <b>/images/slides directory</b> is not writable by the server. Please, change directory permission.</p>", "nwp-slideshow").'</div>';
     $unwritable = __("<b class='red'>To upload/edit an image or add a slide, change /images/slides directory permissions</b>", "nwp-slideshow");
+  } else {
+    /* Check if on/off button are available for slideshow 1 */
+    if (!file_exists(dirname(__FILE__).'/images/slides/onbutton-1.png')) {
+      @copy(dirname(__FILE__)."/images/sources/onbutton.png", dirname(__FILE__)."/images/slides/onbutton-1.png");
+      @copy(dirname(__FILE__)."/images/sources/offbutton.png", dirname(__FILE__)."/images/slides/offbutton-1.png");
+    }
   }
 
-
   require_once(dirname(__FILE__)."/slideshow-backend.php");
-
-
 
 } else {
   add_action("wp_head", "nwpHead");

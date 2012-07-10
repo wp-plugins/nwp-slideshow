@@ -46,8 +46,8 @@ function moveNwps(id) {
     curSlide = parseInt(id);
     
     // Change nav buttons
-    jQuery(".nwpsNav").attr("src", jQuery("#nwpsNav-"+curSlide).attr("src").replace("onbutton.png", "offbutton.png"));
-    jQuery("#nwpsNav-"+curSlide).attr("src", jQuery("#nwpsNav-"+curSlide).attr("src").replace("offbutton.png", "onbutton.png"));
+    jQuery(".nwpsNav").attr("src", jQuery("#nwpsNav-"+curSlide).attr("src").replace("onbutton", "offbutton"));
+    jQuery("#nwpsNav-"+curSlide).attr("src", jQuery("#nwpsNav-"+curSlide).attr("src").replace("offbutton", "onbutton"));
 }
 
 function autoMove() {
@@ -59,8 +59,7 @@ function autoMove() {
 }
 
 jQuery(document).ready(function() {
-
-    jQuery("#nwpsNav-1").attr("src", jQuery("#nwpsNav-1").attr("src").replace("offbutton.png", "onbutton.png"));
+jQuery("#nwpsNav-1").attr("src", jQuery("#nwpsNav-1").attr("src").replace("offbutton", "onbutton"));
     if (autoslide == "on")
 	var intervalId = setInterval("autoMove()", interval*1000);
 

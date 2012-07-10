@@ -4,8 +4,8 @@
 if (!empty($_POST['action']))
   if ($_POST['action'] == "editslideshow")
     editSlideshow($_POST, $_FILES);
-  else if ($_POST['action'] == "resetslideshow")
-    resetSlideshow();
+  else if ($_POST['action'] == "delslideshow")
+    delSlideshow($_POST);
   else if ($_POST['action'] == "editslide")
     editSlide($_POST, $_FILES);
   else if ($_POST['action'] == "deleteslide")
@@ -176,7 +176,7 @@ function nwpsSlidesSettings($uri) {
 
 <?php if (!empty($unwritable)) { echo $unwritable; } else { ?>
 <label for="image"><?php echo _e("Change image", "nwp-slideshow"); ?></label><input type="file" name="image" id="image" />
-    <?php } ?>    
+    <?php } ?>
     <br /><br />
     <h3><?php echo _e("Content (Selection in front of the image indicates where content will be displayed)", "nwp-slideshow"); ?></h3>
     
@@ -206,8 +206,9 @@ function nwpsOptionsSettings($uri) {
 
   ?>
 
-  <form method="post" id="resetForm">
-  <input type="hidden" name="action" value="resetslideshow" />
+  <form method="post" id="delslideshowForm">
+  <input type="hidden" name="action" value="delslideshow" />
+  <input type="hidden" name="id" value="<?php echo get_option('curSlideshow'); ?>" />
   </form>
   <form method="post" enctype="multipart/form-data">
   <input type="hidden" name="action" value="editslideshow" />
@@ -288,14 +289,14 @@ function nwpsOptionsSettings($uri) {
   <label class="label" for="onbuttonimg"><?php _e("On button's image", "nwp-slideshow"); ?></label>
   <?php if (!empty($unwritable)) { echo $unwritable; } else { ?>
   <input type="file" name="onbuttonimg" id="onbuttonimg" />
-  <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/onbutton.png", __FILE__); ?>" alt="off button img" /> </span>
+  <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/onbutton-".get_option('curSlideshow').".png", __FILE__); ?>" alt="off button img" /> </span>
     <?php } ?>
   </div>
   <div class="row">
     <label class="label" for="offbuttonimg"><?php _e("Off button's image", "nwp-slideshow"); ?></label>
     <?php if (!empty($unwritable)) { echo $unwritable; } else { ?>
     <input type="file" name="offbuttonimg" id="offbuttonimg" />
-    <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/offbutton.png", __FILE__); ?>" alt="off button img" /> </span>
+    <span class="clue"><?php _e("Preview : ", "nwp-slideshow"); ?> <img src="<?php echo plugins_url("/images/slides/offbutton-".get_option('curSlideshow').".png", __FILE__); ?>" alt="off button img" /> </span>
     <?php } ?>
   </div>
   <div class="row">
@@ -312,8 +313,9 @@ function nwpsOptionsSettings($uri) {
 
 <input type="submit" value="<?php _e("Edit Slideshow", "nwp-slideshow"); ?>" />
 <span class="spacement"> </span>
-	<a href="javascript:void(0);" id="reset"><?php _e("reset", "nwp-slideshow"); ?></a>
-
+<?php if (get_option("curSlideshow") != 1) { ?>
+<a href="javascript:void(0);" id="delSlideshow"><?php _e("Delete this slideshow", "nwp-slideshow"); ?></a>
+<?php } ?>
 </form>
 
 <?php
@@ -332,12 +334,12 @@ function nwpSlideshowSettings() {
     $slideshows = unserialize($slideshows);
 
   /* Javascript Messages (hidden) */
-  echo "<div class='jsmess' id='jsmess-reset'>".__("Confirm you want to reset slideshow's settings (do not alter slides)", "nwp-slideshow")."</div>";
+  echo "<div class='jsmess' id='jsmess-delslideshow'>".__("Confirm you want to delete this slideshow (including related slides)", "nwp-slideshow")."</div>";
   echo "<div class='jsmess' id='jsmess-delete'>".__("Confirm you want to delete this slide (data + image)", "nwp-slideshow")."</div>";
 
   echo "<div class='wrap'>";
   echo '<div id="icon-options-general" class="icon32"><br></div>';
-  echo "<h2>NWP Slideshow Settings";
+  echo "<h2>NWP Slideshow ".__("Settings", "nwp-slideshow");
   echo "<span id='changeSlideshowContainer'><form method='post' id='changeSlideshow'><select id='changeSlideshowButton' name='changeSlideshow'>";
   for ($i = 0; isset($slideshows[$i]['label']); $i++) {
     echo "<option value='".$slideshows[$i]['id']."' ";
@@ -355,7 +357,6 @@ function nwpSlideshowSettings() {
   echo "<input type='submit' value='Ajouter' />";
   echo "</form>"; // #addSlideshow
 
-
   if (isset($warning) && !empty($warning))
     echo $warning;
   
@@ -363,7 +364,7 @@ function nwpSlideshowSettings() {
   if (isset($_GET['section']))
     $section = $_GET['section'];
 
-  $uri = explode("&", $_SERVER['REQUEST_URI']); 
+  $uri = explode("&", $_SERVER['REQUEST_URI']);
 
   /* Display the menu */
   $menu = Array(

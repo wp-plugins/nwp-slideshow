@@ -1,6 +1,6 @@
-function resetForm() {
-    if (confirm(jQuery("#jsmess-reset").html()) == true)
-	jQuery("#resetForm").submit();
+function delSlideshow() {
+    if (confirm(jQuery("#jsmess-delslideshow").html()) == true)
+	jQuery("#delslideshowForm").submit();
 }
 
 function deleteSlide() {
@@ -20,7 +20,6 @@ function addSlide() {
 	jQuery("#addSlide").slideDown();
     else
 	jQuery("#addSlide").slideUp();
-	
 }
 
 function addSlideshow() {
@@ -39,8 +38,8 @@ function advancedOptions() {
 
 jQuery(document).ready(function() {
 
-    if (jQuery("#resetForm").length > 0) {
-	jQuery("#reset").click(function() { resetForm(); });
+    if (jQuery("#delslideshowForm").length > 0) {
+	jQuery("#delSlideshow").click(function() { delSlideshow(); });
 	jQuery("#advancedButton").click(function() { advancedOptions(); });
     }
     else if (jQuery("#slideLst").length > 0) {

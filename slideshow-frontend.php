@@ -113,7 +113,7 @@ function displaySlideshow($param) {
   /* Controls */
   $s .= '<p id="nwpsControls" style="left:'.$nwpSlideshow['buttonposx'].'px; top:'.$nwpSlideshow['buttonposy'].'px;">';
   for ($i = 0; isset($slides[$i]); $i++) {
-    $s .= '<img src="'.plugins_url("/images/slides/offbutton.png", __FILE__).'" class="nwpsNav" id="nwpsNav-'.($i+1).'" />';
+    $s .= '<img src="'.plugins_url("/images/slides/offbutton-".$id.".png", __FILE__).'" class="nwpsNav" id="nwpsNav-'.($i+1).'" />';
   }
   $s .= '</p>';
 

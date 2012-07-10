@@ -29,6 +29,38 @@ function getSlideshowName($id) {
 
 }
 
+function delSlideshow($_POST) {
+  global $wpdb;
+
+  $id = $_POST['id'];
+
+  if ($id == 1)
+    return ;
+
+  /* Delete slides */
+  $q = "DELETE FROM nwp_slideshow WHERE slideshow='".$_POST."'";
+  $wpdb->query($q);
+
+  /* Delete slideshow */
+  delete_option('nwps_'.$id);
+
+  /* Delete slideshow from list */
+  $slideshows = get_option('nwp_slideshows_list');
+  if (is_string($slideshows))
+    $slideshows = unserialize($slideshows);
+  for ($i = 0; isset($slideshows[$i]); $i++) {
+    if ($slideshows[$i]['id'] == $id)
+      $row = $i;
+  }
+  for ($j = $row; isset($slideshows[$j+1]['id']); $j++)
+    $slideshows[$j] = $slideshows[$j+1];
+  unset($slideshows[$j]);
+  update_option("nwp_slideshows_list", serialize($slideshows));
+
+  /* Change current slideshow */
+  update_option("curSlideshow", "1");
+}
+
 function addSlideshow($_POST) {
   global $wpdb;
 
@@ -66,6 +98,7 @@ function addSlideshow($_POST) {
 		 "type" => "custom"
 		 );
   update_option("nwps_".$id, serialize($array));
+  update_option("curSlideshow", $id);
   @copy(dirname(__FILE__)."/images/sources/onbutton.png", dirname(__FILE__)."/images/slides/onbutton-".$id.".png");
   @copy(dirname(__FILE__)."/images/sources/offbutton.png", dirname(__FILE__)."/images/slides/offbutton-".$id.".png");
 }
