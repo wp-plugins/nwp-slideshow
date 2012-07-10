@@ -9,7 +9,7 @@ Author URI: http://www.nephila.fr
 Licence: GPL
 */
 
-$nwpsVersion = "1.1.1";
+$nwpsVersion = "1.1.0";
 
 register_activation_hook(__FILE__, 'install');
 
